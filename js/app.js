@@ -1,10 +1,14 @@
 /*
  * Create a list that holds all of your cards
  */
- let cards = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
+ let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
  let cardList = document.querySelectorAll('.card');
  let openCardList = [];
  let cardFlipped = 0;
+ let moves = 0;
+ let counter = document.querySelector(".moves");
+ const deck = document.querySelector(".deck");
+ const stars = document.getElementsByClassName("stars").item(0);
 
 /*
  * Display the cards on the page
@@ -28,21 +32,33 @@ function shuffle(array) {
     return array;
 }
 
-//Shuffle array
-function newBoard () {
-  let shuffledArray = shuffle(cards);
-  for(let card of cards) {
-    let deckListElements = deck.getElementsByTagName("li");
-    let listElementsClass = deckListElements[i].getAttribute("class");
-    deckListElements[i].className='';
-    deckListElements[i].classList.add('card');
+function newBoard(){
+  // Shuffle cards
+  shuffledCards = shuffle(cards);
 
-    let deckIconElements = deck.getElementsByTagName("i"); /*shuffle the icons*/
-    let iconElementsClass = deckIconElements[i].getAttribute("class");
-    deckIconElements[i].className='';
-    deckIconElements[i].classList.add('fa',shuffledCards[i]);
-  }
+  for (let i=0; i<cardList.length; i++){
+    let deckCard = deck.getElementsByTagName("li");
+    let cardClass = deckCard[i].getAttribute("class");
+    deckCard[i].className='';
+    deckCard[i].classList.add('card');
+
+    let deckSymbol = deck.getElementsByTagName("i");
+    let symbolClass = deckSymbol[i].getAttribute("class");
+    deckSymbol[i].className='';
+    deckSymbol[i].classList.add('fa', shuffledCards[i]);
+ };
+
+ //Reset move counter
+ moves = 0;
+ counter.innerHTML = moves;
+
+ //Reset star ranking
+ function myFunction(){
+   stars.reset();
+ }
 }
+newBoard();
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -54,6 +70,9 @@ function newBoard () {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+//Following Mike Wales' youtube, 2018
+
+//Card matching functionality
 for (let card of cardList) {
 	card.addEventListener('click', function(e){
     if(!card.classList.contains('match') && !card.classList.contains('open') && !card.classList.contains('show')){
@@ -62,6 +81,7 @@ for (let card of cardList) {
 
       	//Match Card
         if(openCardList.length === 2){
+           moveCounter();
           if(openCardList[0].innerHTML === openCardList[1].innerHTML){
             openCardList[0].classList.add('match');
   					openCardList[1].classList.add('match');
@@ -71,14 +91,27 @@ for (let card of cardList) {
 
           } else {
 
-            //Flip over unmatch Card
+            //Flip over unmatched Card
             	setTimeout(function(){
                 openCardList[0].classList.remove('open', 'show');
                 openCardList[1].classList.remove('open', 'show');
                 openCardList = [];
-              }, 500);
+              }, 700);
           }
         }
     }
+    //Move counter functionality
+    function moveCounter(){
+      moves++;
+      counter.innerHTML = moves;
+    }
+    //Star ranking based on number of moves
+      if(moves === 10){
+        stars.removeChild(stars.childNodes[0]);
+      }else if(moves === 20){
+        stars.removeChild(stars.childNodes[0]);
+      }else if(moves === 25){
+        stars.removeChild(stars.childNodes[0]);
+      }
 	});
 }
