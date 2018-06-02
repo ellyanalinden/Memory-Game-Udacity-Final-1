@@ -1,21 +1,24 @@
-/*
- * Create a list that holds all of your cards
- */
  let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
  let cardList = document.querySelectorAll('.card');
  let openCardList = [];
- let cardFlipped = 0;
+ let matchedCards = 0;
  let moves = 0;
+ let t;
+ let seconds= 0;
+ let minutes= 0;
+ let star= 3;
  let counter = document.querySelector(".moves");
+ let timer = document.querySelector(".timer");
+
  const deck = document.querySelector(".deck");
  const stars = document.getElementsByClassName("stars").item(0);
+ const modalBox = document.querySelector('#modal-box');
+ const modalMessage = document.querySelector("#modal-message");
+ const playAgain = document.querySelector('.playAgain');
+ const restart = document.querySelector('.restart');
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+ //Restart button
+ restart.addEventListener('click', newBoard);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -48,27 +51,24 @@ function newBoard(){
     deckSymbol[i].classList.add('fa', shuffledCards[i]);
  };
 
- //Reset move counter
+ matchedCards = 0;
+
+ //Reset moves counter
  moves = 0;
  counter.innerHTML = moves;
 
  //Reset star ranking
- function myFunction(){
-   stars.reset();
- }
-}
-newBoard();
+ stars.innerHTML='<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li>';
+ star='3';
 
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+ //Reset timer
+ seconds = 0;
+ minutes = 0;
+ timer.innerHTML = "0 mins 0 secs";
+ clearInterval(t);
+}
+
+newBoard();
 
 //Following Mike Wales' youtube, 2018
 
@@ -76,13 +76,16 @@ newBoard();
 for (let card of cardList) {
 	card.addEventListener('click', function(e){
     if(!card.classList.contains('match') && !card.classList.contains('open') && !card.classList.contains('show')){
-      openCardList.push(card);
-      card.classList.add('open', 'show');
+      if(openCardList.length < 2){
+        openCardList.push(card);
+        card.classList.add('open', 'show');
+      }
 
       	//Match Card
         if(openCardList.length === 2){
            moveCounter();
           if(openCardList[0].innerHTML === openCardList[1].innerHTML){
+            matchedCards++;
             openCardList[0].classList.add('match');
   					openCardList[1].classList.add('match');
   					openCardList[0].classList.add('open', 'show');
@@ -100,18 +103,64 @@ for (let card of cardList) {
           }
         }
     }
+
     //Move counter functionality
     function moveCounter(){
       moves++;
       counter.innerHTML = moves;
-    }
-    //Star ranking based on number of moves
-      if(moves === 10){
-        stars.removeChild(stars.childNodes[0]);
-      }else if(moves === 20){
-        stars.removeChild(stars.childNodes[0]);
-      }else if(moves === 25){
-        stars.removeChild(stars.childNodes[0]);
+      //Start timer on first moves
+      if(moves===1){
+        seconds = 0;
+        minutes = 0;
+        startTimer();
       }
+    }
+    
+    //Star ranking based on number of moves
+    if(moves < 10){
+      star ='3';
+    }else if(moves === 10){
+      stars.removeChild(stars.childNodes[0]);
+      star = "2";
+    }else if(moves === 20){
+      stars.removeChild(stars.childNodes[0]);
+      star = "1";
+    }else if(moves === 50){
+      stars.removeChild(stars.childNodes[0]);
+      star = "0";
+    }
+    gameOver();
 	});
 }
+
+//Start timer functionality
+function startTimer(display){
+  t = setInterval(function(){
+    seconds++;
+    if(seconds>=60) {
+      seconds = 0;
+      minutes++;
+    }
+    timer.innerHTML = minutes + "mins" + seconds + "secs";
+  }, 1000);
+};
+
+//Stop timer functionality
+function stopTimer(){
+    clearInterval(t);
+}
+
+//Game over functionality
+function gameOver(){
+  if(matchedCards===8){
+    stopTimer();
+    modalBox.style.display='block';
+    modalMessage.innerHTML= "You did it in" + " " + minutes + " " + "minute(s) and" + " " + seconds + " " + "second(s). You collected" + " " + star + " " + "star(s).";
+  }
+};
+
+//Play again functionality
+playAgain.addEventListener('click',function(){
+  modalBox.style.display = "none";
+  newBoard();
+});
