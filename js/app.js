@@ -1,4 +1,21 @@
- let cards = ["fa-diamond", "fa-diamond", "fa-paper-plane-o", "fa-paper-plane-o", "fa-anchor", "fa-anchor", "fa-bolt", "fa-bolt", "fa-cube", "fa-cube", "fa-leaf", "fa-leaf", "fa-bicycle", "fa-bicycle", "fa-bomb", "fa-bomb"];
+ let cards = [
+    "fa-diamond",
+    "fa-diamond",
+    "fa-paper-plane-o",
+    "fa-paper-plane-o",
+    "fa-anchor",
+    "fa-anchor",
+    "fa-bolt",
+    "fa-bolt",
+    "fa-cube",
+    "fa-cube",
+    "fa-leaf",
+    "fa-leaf",
+    "fa-bicycle",
+    "fa-bicycle",
+    "fa-bomb",
+    "fa-bomb"
+ ];
  let cardList = document.querySelectorAll('.card');
  let openCardList = [];
  let matchedCards = 0;
@@ -52,6 +69,7 @@ function newBoard(){
  };
 
  matchedCards = 0;
+ openCardList = [];
 
  //Reset moves counter
  moves = 0;
@@ -115,7 +133,7 @@ for (let card of cardList) {
         startTimer();
       }
     }
-    
+
     //Star ranking based on number of moves
     if(moves < 10){
       star ='3';
@@ -125,9 +143,6 @@ for (let card of cardList) {
     }else if(moves === 20){
       stars.removeChild(stars.childNodes[0]);
       star = "1";
-    }else if(moves === 50){
-      stars.removeChild(stars.childNodes[0]);
-      star = "0";
     }
     gameOver();
 	});

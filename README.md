@@ -1,7 +1,13 @@
 Project Title
 Memory Game
 
-Description
+Table of Contents
+1. Game description
+2. How to play
+3. Programming description
+4. Dependencies
+
+Game description
 It is a card game. We start with all of the cards face down and there will be two cards flipped face up over each turn. The goal of this game is to turn over pairs of matching cards.
 
 How to play (Udacity Nanodegree, 2018)
@@ -19,5 +25,12 @@ The game is written in JavaScript. I used starter code provided by Udacity. Then
 3. I added moves counter, timer, and star ranking functionality
 4. I added a pop-up box to congratulate the player
 
-Contributing
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+Dependencies
+1. Icons in this game is from:
+https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+
+2.Google Fonts:
+https://fonts.googleapis.com/css?family=Coda
+
+3. Modal box pop-up:
+https://www.w3schools.com/howto/howto_css_modals.asp
